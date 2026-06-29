@@ -48,6 +48,9 @@ curl -X GET "http://localhost:8000/jobs?status=completed" -H "accept: applicatio
 ```
 
 ## Architecture & Data Flow
+
+![Architecture Diagram](almeno.svg)
+
 - **API**: FastAPI receives the file upload, saves it to a shared volume, logs a `Job` in PostgreSQL, and enqueues a Celery task.
 - **Queue**: Celery uses Redis as a message broker to queue the background task, returning the job ID instantly.
 - **Worker**: A Celery worker dequeues the job, loads the CSV using pandas, cleans the data, runs statistical anomaly detection, and calls Gemini via the `google-genai` SDK with exponential backoff (`tenacity` library) for categorization and summarization. It then stores the structured results and status back in PostgreSQL.
