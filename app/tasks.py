@@ -62,8 +62,8 @@ def process_transaction_file(job_id: str, file_path: str):
         # 4. LLM Narrative Summary
         summary_result = generate_narrative_summary(df)
         
-        total_inr = df[df['currency'] == 'INR']['amount'].sum()
-        total_usd = df[df['currency'] == 'USD']['amount'].sum()
+        total_inr = float(df[df['currency'] == 'INR']['amount'].sum())
+        total_usd = float(df[df['currency'] == 'USD']['amount'].sum())
         top_merchants = df['merchant'].value_counts().head(3).to_dict()
         
         summary = JobSummary(
